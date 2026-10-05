@@ -1,0 +1,50 @@
+{
+  "name": "msix-manifest-check",
+  "version": "1.0.0",
+  "description": "MSIX package manifest check: reads the Package.appxmanifest or AppxManifest.xml of a Windows app from disk before a Microsoft Store or sideload release, fetches nothing, and lists an identity with a part missing, a version that is not four 16-bit numbers, a publisher that is not a distinguished name or not the subject of the signing certificate, device family versions out of order or below a build floor, restricted capabilities that need a Store justification, missing properties, visual elements and logo files, applications that cannot start or share an Id, invalid or reserved protocol and file type names, and resource languages that are missing or not well formed, with file and line. Text, JSON, CSV and GitHub annotation output, exit codes for a pipeline, no dependencies.",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "bin": {
+    "msix-manifest-check": "bin/msix-manifest-check.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "docs",
+    "examples",
+    "research",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test \"test/*.test.js\"",
+    "test:coverage": "node --test --experimental-test-coverage \"test/*.test.js\"",
+    "check": "node tools/check.mjs",
+    "example": "node tools/example.mjs"
+  },
+  "keywords": [
+    "msix",
+    "windows-app",
+    "appxmanifest",
+    "microsoft-store",
+    "code-signing",
+    "windows-desktop",
+    "package-manifest",
+    "capabilities",
+    "release",
+    "cli"
+  ],
+  "author": "INNERLUXES <info@innerluxes.dev>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/INNERLUXES/msix-manifest-check.git"
+  },
+  "homepage": "https://innerluxes.dev/application/development/desktop/windows"
+}
