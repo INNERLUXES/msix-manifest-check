@@ -1,0 +1,138 @@
+msix-manifest-check: examples/messy/Package.appxmanifest
+input: 0 folders and 1 file named; 1 manifest; 0 other files passed over; 0 folders inside passed over; 0 links not followed
+root: examples/messy; the asset files the manifests name are looked for under it
+certificate subject: CN=Brindlecote Software Ltd, O=Brindlecote Ltd, L=Leeds, C=GB
+config: examples/config.json (Brindlecote release review): minimum build 10.0.17763.0; restricted capabilities allowed none; reserved protocols http, https, file, ftp, mailto, microsoft-edge, ms-* and brindlecote-admin; minimum severity info; fail on error
+rules: missing-identity (error); invalid-version (error); invalid-architecture (error); invalid-publisher (error); publisher-mismatch (error); missing-target-device-family (error); invalid-target-version (error); min-version-below-floor (warning); restricted-capability (warning); general-capability (info); missing-properties (error); missing-asset (warning); invalid-application (error); duplicate-application-id (error); missing-visual-elements (error); invalid-association (error); reserved-protocol (error); extension-listed (info); missing-resource-language (error); invalid-language-tag (warning); unreadable-manifest (error); scan-limit (error)
+findings: 20 (8 error, 6 warning, 6 info)
+
+Manifests (1)
+
+  manifest                             name                version      architecture  min build  max tested  error  warning  info
+  examples/messy/Package.appxmanifest  Brindlecote.Ledger  4.2.70000.0  x64           16299      22621       8      6        6
+
+Summary
+
+  examples/messy/Package.appxmanifest
+    identity: Brindlecote.Ledger; publisher CN=Brindlecote Software, O=Brindlecote Ltd, L=Leeds, C=GB
+    version: 4.2.70000.0; architecture x64; display name Brindlecote Ledger
+    Windows: Windows.Desktop MinVersion 10.0.22631.0 (build 22631), MaxVersionTested 10.0.19045.0 (build 19045)
+    Windows: Windows.Universal MinVersion 10.0.16299.0 (build 16299), MaxVersionTested 10.0.22621.0 (build 22621)
+    capabilities: restricted runFullTrust, broadFileSystemAccess; general internetClientServer, privateNetworkClientServer; device webcam, microphone, location; custom none
+    applications: App (Ledger.exe), App (LedgerSync.exe)
+    extensions: protocol ms-ledger, file types Ledger Book, windows.startupTask
+    languages: en-GB, en_IE
+
+Rules (22)
+
+  rule                          level    findings
+  missing-identity              error    0
+  invalid-version               error    1
+  invalid-architecture          error    0
+  invalid-publisher             error    0
+  publisher-mismatch            error    1
+  missing-target-device-family  error    0
+  invalid-target-version        error    1
+  min-version-below-floor       warning  1
+  restricted-capability         warning  2
+  general-capability            info     5
+  missing-properties            error    0
+  missing-asset                 warning  2
+  invalid-application           error    1
+  duplicate-application-id      error    1
+  missing-visual-elements       error    1
+  invalid-association           error    1
+  reserved-protocol             error    1
+  extension-listed              info     1
+  missing-resource-language     error    0
+  invalid-language-tag          warning  1
+  unreadable-manifest           error    0
+  scan-limit                    error    0
+
+Findings (20)
+
+  ERROR    publisher-mismatch            examples/messy/Package.appxmanifest:12
+           the Publisher "CN=Brindlecote Software, O=Brindlecote Ltd, L=Leeds, C=GB" is not the certificate subject "CN=Brindlecote Software Ltd, O=Brindlecote Ltd, L=Leeds, C=GB": the CN is "Brindlecote Software" in the manifest and "Brindlecote Software Ltd" in the certificate subject; signing with that certificate fails
+           fix: set Publisher to the exact subject of the certificate that signs the package, or sign with the certificate whose subject the manifest names
+
+  ERROR    invalid-version               examples/messy/Package.appxmanifest:13
+           the Version "4.2.70000.0" is not four 16-bit numbers: 70000 is above 65535, the largest 16-bit part
+           fix: write the version as four numbers from 0 to 65535, such as 1.4.2.0; a build number of a pipeline above 65535 does not fit
+
+  ERROR    invalid-target-version        examples/messy/Package.appxmanifest:23
+           the MinVersion 10.0.22631.0 of Windows.Desktop is above its MaxVersionTested 10.0.19045.0: the app would install only on builds it was never tested on
+           fix: write both versions as 10.0.build.0, with MinVersion at or below MaxVersionTested
+
+  ERROR    reserved-protocol             examples/messy/Package.appxmanifest:42
+           the protocol "ms-ledger" of the application "App" is reserved (ms-*): Windows or the web already handles that scheme, so the registration competes with it for every link
+           fix: use a scheme of the app's own, such as contoso-notes; to open web links, let the default browser handle them
+
+  ERROR    invalid-association           examples/messy/Package.appxmanifest:47
+           the file type association name "Ledger Book" of the application "App" is not valid: it is not all lowercase
+           fix: name the protocol with a lowercase scheme of its own, such as contoso-notes, and the file type association with a lowercase name; write each FileType as .ext
+
+  ERROR    invalid-application           examples/messy/Package.appxmanifest:58
+           the application "App" has an Executable but no EntryPoint and no uap10:RuntimeBehavior, so Windows does not know how to activate it
+           fix: give the application its Id and Executable, and EntryPoint="Windows.FullTrustApplication" for a desktop app (or uap10:RuntimeBehavior and uap10:TrustLevel)
+
+  ERROR    duplicate-application-id      examples/messy/Package.appxmanifest:58
+           the Id "App" is already used by the application at line 33; each application of a package needs an Id of its own
+           fix: give each application of the package an Id of its own, and keep the Id of a published app as it is, because the Start tile follows it
+
+  ERROR    missing-visual-elements       examples/messy/Package.appxmanifest:59
+           the uap:VisualElements of the application "App" has no Description
+           fix: give uap:VisualElements its DisplayName, Description, BackgroundColor, Square150x150Logo and Square44x44Logo
+
+  WARNING  min-version-below-floor       examples/messy/Package.appxmanifest:24
+           the MinVersion 10.0.16299.0 of Windows.Universal (build 16299) is below the floor 10.0.17763.0 (build 17763), so the package installs on builds the team may not test or Microsoft may no longer service
+           fix: raise MinVersion to a build the app is tested on and Microsoft still services, or lower minBuildFloor when the team supports the older build on purpose
+
+  WARNING  invalid-language-tag          examples/messy/Package.appxmanifest:29
+           the Language "en_IE" is not a well-formed BCP 47 tag: it holds a character other than letters, digits and hyphens; BCP 47 separates subtags with a hyphen
+           fix: write the language as a BCP 47 tag with hyphens, such as en-US, de-DE or zh-Hans-CN
+
+  WARNING  missing-asset                 examples/messy/Package.appxmanifest:39
+           the path "Assets\Square44x44Logo.png" (the Square44x44Logo of the application "App") is not under the root examples/messy: Assets holds no Square44x44Logo.png, with or without qualifiers such as .scale-200
+           fix: add the image to the package under that path, in at least one scale, or correct the path in the manifest
+
+  WARNING  missing-asset                 examples/messy/Package.appxmanifest:63
+           the path "Assets\Square44x44Logo.png" (the Square44x44Logo of the application "App") is not under the root examples/messy: Assets holds no Square44x44Logo.png, with or without qualifiers such as .scale-200
+           fix: add the image to the package under that path, in at least one scale, or correct the path in the manifest
+
+  WARNING  restricted-capability         examples/messy/Package.appxmanifest:70
+           runFullTrust is a restricted capability: the package holds full-trust code, such as a packaged desktop app, that runs at medium integrity outside the app container; a Store submission must say why the app needs it, and the Store may refuse it
+           fix: remove the capability when the app does not need it; otherwise write down why the app needs it for the Store submission, and add it to allowedRestrictedCapabilities once it is approved
+
+  WARNING  restricted-capability         examples/messy/Package.appxmanifest:71
+           broadFileSystemAccess is a restricted capability: the app can reach every file the signed-in user can, with no file picker; the Store asks why the pickers and the future access list are not enough; a Store submission must say why the app needs it, and the Store may refuse it
+           fix: remove the capability when the app does not need it; otherwise write down why the app needs it for the Store submission, and add it to allowedRestrictedCapabilities once it is approved
+
+  INFO     extension-listed              examples/messy/Package.appxmanifest:53
+           the application "App" declares a startup task: an executable that starts when the user signs in, unless the user turns it off (LedgerAgent.exe)
+           fix: keep the extension when the app needs it, and make sure the release notes and the Store listing say what it does
+
+  INFO     general-capability            examples/messy/Package.appxmanifest:68
+           internetClientServer is a general-use capability: incoming connections from the internet as well as outgoing ones, so the app can act as a server
+           fix: keep only the capabilities the app uses; privacy-sensitive ones (camera, microphone, location) need the app to work when the user turns them off
+
+  INFO     general-capability            examples/messy/Package.appxmanifest:69
+           privateNetworkClientServer is a general-use capability: incoming and outgoing connections on home and work networks, through the firewall
+           fix: keep only the capabilities the app uses; privacy-sensitive ones (camera, microphone, location) need the app to work when the user turns them off
+
+  INFO     general-capability            examples/messy/Package.appxmanifest:72
+           webcam is a device capability: the video feed of the camera; users can turn the access off in the privacy settings
+           fix: keep only the capabilities the app uses; privacy-sensitive ones (camera, microphone, location) need the app to work when the user turns them off
+
+  INFO     general-capability            examples/messy/Package.appxmanifest:73
+           microphone is a device capability: the audio feed of the microphone; users can turn the access off in the privacy settings
+           fix: keep only the capabilities the app uses; privacy-sensitive ones (camera, microphone, location) need the app to work when the user turns them off
+
+  INFO     general-capability            examples/messy/Package.appxmanifest:74
+           location is a device capability: the location of the device from GPS or the network; users can turn location off
+           fix: keep only the capabilities the app uses; privacy-sensitive ones (camera, microphone, location) need the app to work when the user turns them off
+
+note: 5 asset paths looked for under examples/messy
+
+This check reads the manifest and the asset files beside it on disk and fetches nothing. A finding is a lead with a file and a line, and a clean result is not a signature verification and not a Store certification (docs/limits.md).
+
+RESULT: FAIL - 8 findings at or above error (8 error, 6 warning, 6 info)

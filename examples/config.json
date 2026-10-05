@@ -1,0 +1,6 @@
+{
+  "name": "Brindlecote release review",
+  "minBuildFloor": "10.0.17763.0",
+  "allowedRestrictedCapabilities": [],
+  "reservedProtocols": ["http", "https", "file", "ftp", "mailto", "microsoft-edge", "ms-*", "brindlecote-admin"]
+}

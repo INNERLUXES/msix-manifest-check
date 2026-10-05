@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Oakhollow Notes: a manifest in good order. -->
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  IgnorableNamespaces="uap">
+
+  <Identity
+    Name="Oakhollow.Notes"
+    Publisher="CN=Oakhollow Labs, O=Oakhollow Labs Ltd, L=Galway, C=IE"
+    Version="2.6.14.0"
+    ProcessorArchitecture="x64" />
+
+  <Properties>
+    <DisplayName>Oakhollow Notes</DisplayName>
+    <PublisherDisplayName>Oakhollow Labs</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19041.0" MaxVersionTested="10.0.22621.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="en-US" />
+    <Resource Language="de-DE" />
+    <Resource Language="zh-Hans-CN" />
+  </Resources>
+
+  <Applications>
+    <Application Id="Notes" Executable="OakhollowNotes.exe" EntryPoint="Oakhollow.Notes.App">
+      <uap:VisualElements
+        DisplayName="Oakhollow Notes"
+        Description="Notes that stay on your device"
+        BackgroundColor="#1E3A5F"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
+        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+      </uap:VisualElements>
+      <Extensions>
+        <uap:Extension Category="windows.protocol">
+          <uap:Protocol Name="oakhollow-notes">
+            <uap:DisplayName>Oakhollow Notes link</uap:DisplayName>
+          </uap:Protocol>
+        </uap:Extension>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="oaknote">
+            <uap:SupportedFileTypes>
+              <uap:FileType>.oaknote</uap:FileType>
+            </uap:SupportedFileTypes>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+</Package>

@@ -1,0 +1,59 @@
+msix-manifest-check: examples/clean/Package.appxmanifest
+input: 0 folders and 1 file named; 1 manifest; 0 other files passed over; 0 folders inside passed over; 0 links not followed
+root: examples/clean; the asset files the manifests name are looked for under it
+certificate subject: CN=Oakhollow Labs, O=Oakhollow Labs Ltd, L=Galway, C=IE
+config: built-in defaults: minimum build 10.0.17763.0; restricted capabilities allowed none; reserved protocols http, https, file, ftp, mailto, microsoft-edge and ms-*; minimum severity info; fail on error
+rules: missing-identity (error); invalid-version (error); invalid-architecture (error); invalid-publisher (error); publisher-mismatch (error); missing-target-device-family (error); invalid-target-version (error); min-version-below-floor (warning); restricted-capability (warning); general-capability (info); missing-properties (error); missing-asset (warning); invalid-application (error); duplicate-application-id (error); missing-visual-elements (error); invalid-association (error); reserved-protocol (error); extension-listed (info); missing-resource-language (error); invalid-language-tag (warning); unreadable-manifest (error); scan-limit (error)
+findings: 0
+
+Manifests (1)
+
+  manifest                             name             version   architecture  min build  max tested  error  warning  info
+  examples/clean/Package.appxmanifest  Oakhollow.Notes  2.6.14.0  x64           19041      22621       0      0        0
+
+Summary
+
+  examples/clean/Package.appxmanifest
+    identity: Oakhollow.Notes; publisher CN=Oakhollow Labs, O=Oakhollow Labs Ltd, L=Galway, C=IE
+    version: 2.6.14.0; architecture x64; display name Oakhollow Notes
+    Windows: Windows.Desktop MinVersion 10.0.19041.0 (build 19041), MaxVersionTested 10.0.22621.0 (build 22621)
+    capabilities: restricted none; general none; device none; custom none
+    applications: Notes (OakhollowNotes.exe)
+    extensions: protocol oakhollow-notes, file types oaknote
+    languages: en-US, de-DE, zh-Hans-CN
+
+Rules (22)
+
+  rule                          level    findings
+  missing-identity              error    0
+  invalid-version               error    0
+  invalid-architecture          error    0
+  invalid-publisher             error    0
+  publisher-mismatch            error    0
+  missing-target-device-family  error    0
+  invalid-target-version        error    0
+  min-version-below-floor       warning  0
+  restricted-capability         warning  0
+  general-capability            info     0
+  missing-properties            error    0
+  missing-asset                 warning  0
+  invalid-application           error    0
+  duplicate-application-id      error    0
+  missing-visual-elements       error    0
+  invalid-association           error    0
+  reserved-protocol             error    0
+  extension-listed              info     0
+  missing-resource-language     error    0
+  invalid-language-tag          warning  0
+  unreadable-manifest           error    0
+  scan-limit                    error    0
+
+Findings (0)
+
+  none
+
+note: 5 asset paths looked for under examples/clean
+
+This check reads the manifest and the asset files beside it on disk and fetches nothing. A finding is a lead with a file and a line, and a clean result is not a signature verification and not a Store certification (docs/limits.md).
+
+RESULT: PASS - no finding at or above error

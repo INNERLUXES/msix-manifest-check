@@ -1,0 +1,219 @@
+msix-manifest-check: examples/messy/Package.appxmanifest
+input: 0 folders and 1 file named; 1 manifest; 0 other files passed over; 0 folders inside passed over; 0 links not followed
+root: examples/messy; the asset files the manifests name are looked for under it
+certificate subject: CN=Brindlecote Software Ltd, O=Brindlecote Ltd, L=Leeds, C=GB
+config: examples/config.json (Brindlecote release review): minimum build 10.0.17763.0; restricted capabilities allowed none; reserved protocols http, https, file, ftp, mailto, microsoft-edge, ms-* and brindlecote-admin; minimum severity info; fail on error
+rules: missing-identity (error); invalid-version (error); invalid-architecture (error); invalid-publisher (error); publisher-mismatch (error); missing-target-device-family (error); invalid-target-version (error); min-version-below-floor (warning); restricted-capability (warning); general-capability (info); missing-properties (error); missing-asset (warning); invalid-application (error); duplicate-application-id (error); missing-visual-elements (error); invalid-association (error); reserved-protocol (error); extension-listed (info); missing-resource-language (error); invalid-language-tag (warning); unreadable-manifest (error); scan-limit (error)
+findings: 20 (8 error, 6 warning, 6 info)
+
+Manifests (1)
+
+  manifest                             name                version      architecture  min build  max tested  error  warning  info
+  examples/messy/Package.appxmanifest  Brindlecote.Ledger  4.2.70000.0  x64           16299      22621       8      6        6
+
+Summary
+
+  examples/messy/Package.appxmanifest
+    identity: Brindlecote.Ledger; publisher CN=Brindlecote Software, O=Brindlecote Ltd, L=Leeds, C=GB
+    version: 4.2.70000.0; architecture x64; display name Brindlecote Ledger
+    Windows: Windows.Desktop MinVersion 10.0.22631.0 (build 22631), MaxVersionTested 10.0.19045.0 (build 19045)
+    Windows: Windows.Universal MinVersion 10.0.16299.0 (build 16299), MaxVersionTested 10.0.22621.0 (build 22621)
+    capabilities: restricted runFullTrust, broadFileSystemAccess; general internetClientServer, privateNetworkClientServer; device webcam, microphone, location; custom none
+    applications: App (Ledger.exe), App (LedgerSync.exe)
+    extensions: protocol ms-ledger, file types Ledger Book, windows.startupTask
+    languages: en-GB, en_IE
+
+Rules (22)
+
+  rule                          level    findings
+  missing-identity              error    0
+  invalid-version               error    1
+  invalid-architecture          error    0
+  invalid-publisher             error    0
+  publisher-mismatch            error    1
+  missing-target-device-family  error    0
+  invalid-target-version        error    1
+  min-version-below-floor       warning  1
+  restricted-capability         warning  2
+  general-capability            info     5
+  missing-properties            error    0
+  missing-asset                 warning  2
+  invalid-application           error    1
+  duplicate-application-id      error    1
+  missing-visual-elements       error    1
+  invalid-association           error    1
+  reserved-protocol             error    1
+  extension-listed              info     1
+  missing-resource-language     error    0
+  invalid-language-tag          warning  1
+  unreadable-manifest           error    0
+  scan-limit                    error    0
+
+Findings (20)
+
+  ERROR    publisher-mismatch            examples/messy/Package.appxmanifest:12
+           the Publisher "CN=Brindlecote Software, O=Brindlecote Ltd, L=Leeds, C=GB" is not the certificate subject "CN=Brindlecote Software Ltd, O=Brindlecote Ltd, L=Leeds, C=GB": the CN is "Brindlecote Software" in the manifest and "Brindlecote Software Ltd" in the certificate subject; signing with that certificate fails
+           fix: set Publisher to the exact subject of the certificate that signs the package, or sign with the certificate whose subject the manifest names
+           rule: an Identity Publisher that differs from the subject given with --cert-subject
+           basis: the Publisher must match the publisher subject of the certificate the package is signed with (Identity (manifest schema, Microsoft Learn), https://learn.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-identity)
+           basis: the Subject of the signing certificate must match the Publisher of the manifest, a distinguished name such as CN=..., O=..., C=... (Create a certificate for package signing (MSIX, Microsoft Learn), https://learn.microsoft.com/en-us/windows/msix/package/create-certificate-package-signing)
+           basis: every MSIX package must be signed before it is installed, and Windows reads the manifest to deploy, show and update the app (What is MSIX? (Microsoft Learn), https://learn.microsoft.com/en-us/windows/msix/overview)
+           the tool's own choice: only with --cert-subject: Identity Publisher against the subject given, compared as text, exactly; the message says which part differs, or that only the spacing or the order differs, because signing fails either way
+
+  ERROR    invalid-version               examples/messy/Package.appxmanifest:13
+           the Version "4.2.70000.0" is not four 16-bit numbers: 70000 is above 65535, the largest 16-bit part
+           fix: write the version as four numbers from 0 to 65535, such as 1.4.2.0; a build number of a pipeline above 65535 does not fit
+           rule: an Identity Version that is not major.minor.build.revision with each part from 0 to 65535
+           basis: Name, Publisher and Version are required; Version is in quad notation, major.minor.build.revision; ProcessorArchitecture is x86, x64, arm, arm64, x86a64 or neutral, and a package with executable code has it (Identity (manifest schema, Microsoft Learn), https://learn.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-identity)
+           the tool's own choice: Identity Version that is not four whole numbers separated by dots, each from 0 to 65535 with no leading zero; the version of a .NET or C++ project often has three parts, or a build number above 65535
+
+  ERROR    invalid-target-version        examples/messy/Package.appxmanifest:23
+           the MinVersion 10.0.22631.0 of Windows.Desktop is above its MaxVersionTested 10.0.19045.0: the app would install only on builds it was never tested on
+           fix: write both versions as 10.0.build.0, with MinVersion at or below MaxVersionTested
+           rule: a TargetDeviceFamily version that is not a quad version, or a MinVersion above its MaxVersionTested
+           basis: TargetDeviceFamily needs Name, MinVersion and MaxVersionTested, and both versions are in quad notation (TargetDeviceFamily in Dependencies (manifest schema, Microsoft Learn), https://learn.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-targetdevicefamily)
+           basis: the app is not applicable on a system older than MinVersion, and MaxVersionTested is the newest version the app was tested against, which decides the behavior it gets (TargetDeviceFamily in Dependencies (manifest schema, Microsoft Learn), https://learn.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-targetdevicefamily)
+           the tool's own choice: a MinVersion or MaxVersionTested that is not four 16-bit numbers, and a MinVersion higher than the MaxVersionTested of the same TargetDeviceFamily, which says the app was never tested on a build it installs on
+
+  ERROR    reserved-protocol             examples/messy/Package.appxmanifest:42
+           the protocol "ms-ledger" of the application "App" is reserved (ms-*): Windows or the web already handles that scheme, so the registration competes with it for every link
+           fix: use a scheme of the app's own, such as contoso-notes; to open web links, let the default browser handle them
+           rule: a protocol named http, https, file, ftp, mailto, microsoft-edge, ms-* and brindlecote-admin
+           basis: Windows comes with handlers for schemes such as http, https, mailto, ms-settings and ms-store, and the user picks the app that opens a scheme (Launch the default Windows app for a URI (Microsoft Learn), https://learn.microsoft.com/en-us/windows/apps/develop/launch/launch-default-app)
+           basis: the scheme name must be all lowercase, an app should register a scheme only to handle all of it, and a new scheme name follows RFC 4395 (Handle URI activation with a Windows app (Microsoft Learn), https://learn.microsoft.com/en-us/windows/apps/develop/launch/handle-uri-activation)
+           the tool's own choice: the tool's own choice: a protocol Name in reservedProtocols (http, https, file, ftp, mailto, microsoft-edge and every name starting with ms- by default), compared without case; an app that registers one competes with the handlers of Windows for every link of that scheme
+
+  ERROR    invalid-association           examples/messy/Package.appxmanifest:47
+           the file type association name "Ledger Book" of the application "App" is not valid: it is not all lowercase
+           fix: name the protocol with a lowercase scheme of its own, such as contoso-notes, and the file type association with a lowercase name; write each FileType as .ext
+           rule: a protocol or file type association name, or a file type, that Windows does not take
+           basis: the Name of uap:Protocol is the URI scheme, 2 to 2,048 characters, unique in the package (uap:Protocol (manifest schema, Microsoft Learn), https://learn.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-uap-protocol)
+           basis: the scheme name must be all lowercase, an app should register a scheme only to handle all of it, and a new scheme name follows RFC 4395 (Handle URI activation with a Windows app (Microsoft Learn), https://learn.microsoft.com/en-us/windows/apps/develop/launch/handle-uri-activation)
+           basis: the Name of uap:FileTypeAssociation is 1 to 64 characters, all lowercase, with no spaces (uap:FileTypeAssociation (manifest schema, Microsoft Learn), https://learn.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-uap-filetypeassociation)
+           the tool's own choice: a protocol Name that is not 2 to 2,048 characters, a lowercase letter followed by lowercase letters, digits, +, - or . (the form of a URI scheme); a protocol named twice in the package; a file type association Name that is not 1 to 64 lowercase characters with no space; and a FileType that does not start with a dot or holds a space
+
+  ERROR    invalid-application           examples/messy/Package.appxmanifest:58
+           the application "App" has an Executable but no EntryPoint and no uap10:RuntimeBehavior, so Windows does not know how to activate it
+           fix: give the application its Id and Executable, and EntryPoint="Windows.FullTrustApplication" for a desktop app (or uap10:RuntimeBehavior and uap10:TrustLevel)
+           rule: an Application with no Id, or with no way to start it
+           basis: Id is required and cannot be used twice in one package; Executable ends with .exe; without StartPage, both Executable and EntryPoint are given (Application (manifest schema, Microsoft Learn), https://learn.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-application)
+           basis: uap10:RuntimeBehavior with uap10:TrustLevel can stand in for EntryPoint, and Windows.FullTrustApplication is the entry point of a full-trust desktop app (Application (manifest schema, Microsoft Learn), https://learn.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-application)
+           the tool's own choice: an Application with no Id; with no StartPage and no Executable; with an Executable that does not end with .exe; and with an Executable but no StartPage, no EntryPoint and no uap10:RuntimeBehavior of packagedClassicApp or win32App
+
+  ERROR    duplicate-application-id      examples/messy/Package.appxmanifest:58
+           the Id "App" is already used by the application at line 33; each application of a package needs an Id of its own
+           fix: give each application of the package an Id of its own, and keep the Id of a published app as it is, because the Start tile follows it
+           rule: an Application Id used twice in one manifest
+           basis: Id is required and cannot be used twice in one package; Executable ends with .exe; without StartPage, both Executable and EntryPoint are given (Application (manifest schema, Microsoft Learn), https://learn.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-application)
+           the tool's own choice: two Application elements with the same Id, compared with their case; the second one is reported, with the line of the first
+
+  ERROR    missing-visual-elements       examples/messy/Package.appxmanifest:59
+           the uap:VisualElements of the application "App" has no Description
+           fix: give uap:VisualElements its DisplayName, Description, BackgroundColor, Square150x150Logo and Square44x44Logo
+           rule: an Application whose uap:VisualElements is missing or lacks a required attribute
+           basis: uap:VisualElements needs DisplayName, Description, BackgroundColor, Square150x150Logo and Square44x44Logo, and a logo is a .png, .jpg or .jpeg path (uap:VisualElements (manifest schema, Microsoft Learn), https://learn.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-uap-visualelements)
+           the tool's own choice: an Application with no VisualElements of the uap namespace family, and a VisualElements with no DisplayName, Description, BackgroundColor, Square150x150Logo or Square44x44Logo, or with one that is empty; all that is missing is named in one finding
+
+  WARNING  min-version-below-floor       examples/messy/Package.appxmanifest:24
+           the MinVersion 10.0.16299.0 of Windows.Universal (build 16299) is below the floor 10.0.17763.0 (build 17763), so the package installs on builds the team may not test or Microsoft may no longer service
+           fix: raise MinVersion to a build the app is tested on and Microsoft still services, or lower minBuildFloor when the team supports the older build on purpose
+           rule: a TargetDeviceFamily MinVersion below 10.0.17763.0
+           basis: the app is not applicable on a system older than MinVersion, and MaxVersionTested is the newest version the app was tested against, which decides the behavior it gets (TargetDeviceFamily in Dependencies (manifest schema, Microsoft Learn), https://learn.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-targetdevicefamily)
+           basis: Microsoft lists the Windows builds that are still serviced, with the end of servicing of each, and the list changes over time (Windows release information (Microsoft Learn), https://learn.microsoft.com/en-us/windows/release-health/release-information)
+           the tool's own choice: the tool's own choice: a MinVersion below minBuildFloor (10.0.17763.0 by default, a number in the configuration, never a date); the floor stands for the oldest build the team still supports and tests, and Microsoft's release information page lists the builds still serviced
+
+  WARNING  invalid-language-tag          examples/messy/Package.appxmanifest:29
+           the Language "en_IE" is not a well-formed BCP 47 tag: it holds a character other than letters, digits and hyphens; BCP 47 separates subtags with a hyphen
+           fix: write the language as a BCP 47 tag with hyphens, such as en-US, de-DE or zh-Hans-CN
+           rule: a Resource Language that is not a well-formed BCP 47 tag
+           basis: the Language of a Resource is a BCP 47 language tag, and the first Resource names the default language (Resource (manifest schema, Microsoft Learn), https://learn.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-resource)
+           basis: a tag is a language subtag with optional script, region, variant, extension and private use subtags after it, separated by hyphens, of at most eight characters each and compared without case (RFC 5646, Tags for Identifying Languages, https://www.rfc-editor.org/rfc/rfc5646)
+           the tool's own choice: a Resource Language that is not a well-formed BCP 47 tag: subtags of letters and digits separated by hyphens, in the order language, script, region, variants, extensions and private use; whether a subtag is in the IANA registry is not checked
+
+  WARNING  missing-asset                 examples/messy/Package.appxmanifest:39
+           the path "Assets\Square44x44Logo.png" (the Square44x44Logo of the application "App") is not under the root examples/messy: Assets holds no Square44x44Logo.png, with or without qualifiers such as .scale-200
+           fix: add the image to the package under that path, in at least one scale, or correct the path in the manifest
+           rule: a logo path of the manifest with no file under --root, plain or with qualifiers
+           basis: Properties needs DisplayName, PublisherDisplayName and Logo, the path to a file that holds an image (Properties (manifest schema, Microsoft Learn), https://learn.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-properties)
+           basis: the logos can be given in several scales, so that Windows picks the best image for the display (uap:VisualElements (manifest schema, Microsoft Learn), https://learn.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-uap-visualelements)
+           basis: a qualifier such as scale-200 goes in the file name (logo.scale-200.png) or in a folder name (scale-200/logo.png), and a file with no qualifier is the neutral match (Tailor your resources for language, scale, high contrast, and other qualifiers (Microsoft Learn), https://learn.microsoft.com/en-us/windows/uwp/app-resources/tailor-resources-lang-scale-contrast)
+           the tool's own choice: only with --root: the Logo of Properties, the logos of uap:VisualElements, its DefaultTile, SplashScreen and LockScreen, and the logos of protocols and file types, looked for under the root by the path the manifest gives, with its case ignored as Windows does; a file with qualifiers in its name (Logo.scale-200.png, Logo.targetsize-48_altform-unplated.png) or in a folder of qualifiers (scale-200/Logo.png) counts; a path that leaves the root, a symbolic link and an ms-appx or other address are reported
+
+  WARNING  missing-asset                 examples/messy/Package.appxmanifest:63
+           the path "Assets\Square44x44Logo.png" (the Square44x44Logo of the application "App") is not under the root examples/messy: Assets holds no Square44x44Logo.png, with or without qualifiers such as .scale-200
+           fix: add the image to the package under that path, in at least one scale, or correct the path in the manifest
+           rule: a logo path of the manifest with no file under --root, plain or with qualifiers
+           basis: Properties needs DisplayName, PublisherDisplayName and Logo, the path to a file that holds an image (Properties (manifest schema, Microsoft Learn), https://learn.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-properties)
+           basis: the logos can be given in several scales, so that Windows picks the best image for the display (uap:VisualElements (manifest schema, Microsoft Learn), https://learn.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-uap-visualelements)
+           basis: a qualifier such as scale-200 goes in the file name (logo.scale-200.png) or in a folder name (scale-200/logo.png), and a file with no qualifier is the neutral match (Tailor your resources for language, scale, high contrast, and other qualifiers (Microsoft Learn), https://learn.microsoft.com/en-us/windows/uwp/app-resources/tailor-resources-lang-scale-contrast)
+           the tool's own choice: only with --root: the Logo of Properties, the logos of uap:VisualElements, its DefaultTile, SplashScreen and LockScreen, and the logos of protocols and file types, looked for under the root by the path the manifest gives, with its case ignored as Windows does; a file with qualifiers in its name (Logo.scale-200.png, Logo.targetsize-48_altform-unplated.png) or in a folder of qualifiers (scale-200/Logo.png) counts; a path that leaves the root, a symbolic link and an ms-appx or other address are reported
+
+  WARNING  restricted-capability         examples/messy/Package.appxmanifest:70
+           runFullTrust is a restricted capability: the package holds full-trust code, such as a packaged desktop app, that runs at medium integrity outside the app container; a Store submission must say why the app needs it, and the Store may refuse it
+           fix: remove the capability when the app does not need it; otherwise write down why the app needs it for the Store submission, and add it to allowedRestrictedCapabilities once it is approved
+           rule: a restricted capability not in allowedRestrictedCapabilities (none allowed)
+           basis: restricted capabilities are for very specific scenarios; a Store submission that declares one must say why, and the testers approve it or fail the submission, while sideloading needs no approval (App capability declarations (Microsoft Learn), https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/app-capability-declarations)
+           basis: capabilities are general-use, device, restricted or custom, and restricted ones are declared in the rescap namespace (App capability declarations (Microsoft Learn), https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/app-capability-declarations)
+           the tool's own choice: every Capability of the rescap namespace family, found by its namespace URI and not by its prefix, that is not in allowedRestrictedCapabilities; a sideloaded package needs no approval, so this is a warning and not an error
+
+  WARNING  restricted-capability         examples/messy/Package.appxmanifest:71
+           broadFileSystemAccess is a restricted capability: the app can reach every file the signed-in user can, with no file picker; the Store asks why the pickers and the future access list are not enough; a Store submission must say why the app needs it, and the Store may refuse it
+           fix: remove the capability when the app does not need it; otherwise write down why the app needs it for the Store submission, and add it to allowedRestrictedCapabilities once it is approved
+           rule: a restricted capability not in allowedRestrictedCapabilities (none allowed)
+           basis: restricted capabilities are for very specific scenarios; a Store submission that declares one must say why, and the testers approve it or fail the submission, while sideloading needs no approval (App capability declarations (Microsoft Learn), https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/app-capability-declarations)
+           basis: capabilities are general-use, device, restricted or custom, and restricted ones are declared in the rescap namespace (App capability declarations (Microsoft Learn), https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/app-capability-declarations)
+           the tool's own choice: every Capability of the rescap namespace family, found by its namespace URI and not by its prefix, that is not in allowedRestrictedCapabilities; a sideloaded package needs no approval, so this is a warning and not an error
+
+  INFO     extension-listed              examples/messy/Package.appxmanifest:53
+           the application "App" declares a startup task: an executable that starts when the user signs in, unless the user turns it off (LedgerAgent.exe)
+           fix: keep the extension when the app needs it, and make sure the release notes and the Store listing say what it does
+           rule: a startup task, full-trust process, app service, COM server, execution alias or firewall rule, listed for review
+           basis: a packaged desktop app joins Windows through extensions, each the Category of an Extension element: protocols, file types, startup tasks, COM servers and more (Integrate your desktop app with Windows using packaging extensions (Microsoft Learn), https://learn.microsoft.com/en-us/windows/apps/desktop/modernize/desktop-to-uwp-extensions)
+           basis: an app service lets other apps call a background task of this app by its service name (uap3:AppService (manifest schema, Microsoft Learn), https://learn.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-uap3-appservice)
+           the tool's own choice: every application extension of the category windows.startupTask, windows.fullTrustProcess, windows.appService, windows.comServer, windows.appExecutionAlias or windows.firewallRules, listed with what it implies so that a reviewer sees it
+
+  INFO     general-capability            examples/messy/Package.appxmanifest:68
+           internetClientServer is a general-use capability: incoming connections from the internet as well as outgoing ones, so the app can act as a server
+           fix: keep only the capabilities the app uses; privacy-sensitive ones (camera, microphone, location) need the app to work when the user turns them off
+           rule: a capability that is not restricted, listed for review
+           basis: capabilities are general-use, device, restricted or custom, and restricted ones are declared in the rescap namespace (App capability declarations (Microsoft Learn), https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/app-capability-declarations)
+           basis: Capabilities holds Capability elements of the foundation, uap and rescap namespaces, DeviceCapability and CustomCapability elements (Capabilities (manifest schema, Microsoft Learn), https://learn.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-capabilities)
+           the tool's own choice: every Capability of the foundation or uap namespace family, every DeviceCapability and every CustomCapability, listed so that a reviewer sees what the app asks for; none of them is a problem by itself
+
+  INFO     general-capability            examples/messy/Package.appxmanifest:69
+           privateNetworkClientServer is a general-use capability: incoming and outgoing connections on home and work networks, through the firewall
+           fix: keep only the capabilities the app uses; privacy-sensitive ones (camera, microphone, location) need the app to work when the user turns them off
+           rule: a capability that is not restricted, listed for review
+           basis: capabilities are general-use, device, restricted or custom, and restricted ones are declared in the rescap namespace (App capability declarations (Microsoft Learn), https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/app-capability-declarations)
+           basis: Capabilities holds Capability elements of the foundation, uap and rescap namespaces, DeviceCapability and CustomCapability elements (Capabilities (manifest schema, Microsoft Learn), https://learn.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-capabilities)
+           the tool's own choice: every Capability of the foundation or uap namespace family, every DeviceCapability and every CustomCapability, listed so that a reviewer sees what the app asks for; none of them is a problem by itself
+
+  INFO     general-capability            examples/messy/Package.appxmanifest:72
+           webcam is a device capability: the video feed of the camera; users can turn the access off in the privacy settings
+           fix: keep only the capabilities the app uses; privacy-sensitive ones (camera, microphone, location) need the app to work when the user turns them off
+           rule: a capability that is not restricted, listed for review
+           basis: capabilities are general-use, device, restricted or custom, and restricted ones are declared in the rescap namespace (App capability declarations (Microsoft Learn), https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/app-capability-declarations)
+           basis: Capabilities holds Capability elements of the foundation, uap and rescap namespaces, DeviceCapability and CustomCapability elements (Capabilities (manifest schema, Microsoft Learn), https://learn.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-capabilities)
+           the tool's own choice: every Capability of the foundation or uap namespace family, every DeviceCapability and every CustomCapability, listed so that a reviewer sees what the app asks for; none of them is a problem by itself
+
+  INFO     general-capability            examples/messy/Package.appxmanifest:73
+           microphone is a device capability: the audio feed of the microphone; users can turn the access off in the privacy settings
+           fix: keep only the capabilities the app uses; privacy-sensitive ones (camera, microphone, location) need the app to work when the user turns them off
+           rule: a capability that is not restricted, listed for review
+           basis: capabilities are general-use, device, restricted or custom, and restricted ones are declared in the rescap namespace (App capability declarations (Microsoft Learn), https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/app-capability-declarations)
+           basis: Capabilities holds Capability elements of the foundation, uap and rescap namespaces, DeviceCapability and CustomCapability elements (Capabilities (manifest schema, Microsoft Learn), https://learn.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-capabilities)
+           the tool's own choice: every Capability of the foundation or uap namespace family, every DeviceCapability and every CustomCapability, listed so that a reviewer sees what the app asks for; none of them is a problem by itself
+
+  INFO     general-capability            examples/messy/Package.appxmanifest:74
+           location is a device capability: the location of the device from GPS or the network; users can turn location off
+           fix: keep only the capabilities the app uses; privacy-sensitive ones (camera, microphone, location) need the app to work when the user turns them off
+           rule: a capability that is not restricted, listed for review
+           basis: capabilities are general-use, device, restricted or custom, and restricted ones are declared in the rescap namespace (App capability declarations (Microsoft Learn), https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/app-capability-declarations)
+           basis: Capabilities holds Capability elements of the foundation, uap and rescap namespaces, DeviceCapability and CustomCapability elements (Capabilities (manifest schema, Microsoft Learn), https://learn.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-capabilities)
+           the tool's own choice: every Capability of the foundation or uap namespace family, every DeviceCapability and every CustomCapability, listed so that a reviewer sees what the app asks for; none of them is a problem by itself
+
+note: 5 asset paths looked for under examples/messy
+
+This check reads the manifest and the asset files beside it on disk and fetches nothing. A finding is a lead with a file and a line, and a clean result is not a signature verification and not a Store certification (docs/limits.md).
+
+RESULT: FAIL - 8 findings at or above error (8 error, 6 warning, 6 info)

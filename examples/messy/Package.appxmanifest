@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Brindlecote Ledger: the manifest as it stood before the release review. -->
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+  xmlns:restricted="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap desktop restricted">
+
+  <Identity
+    Name="Brindlecote.Ledger"
+    Publisher="CN=Brindlecote Software, O=Brindlecote Ltd, L=Leeds, C=GB"
+    Version="4.2.70000.0"
+    ProcessorArchitecture="x64" />
+
+  <Properties>
+    <DisplayName>Brindlecote Ledger</DisplayName>
+    <PublisherDisplayName>Brindlecote Ltd</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.22631.0" MaxVersionTested="10.0.19045.0" />
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.16299.0" MaxVersionTested="10.0.22621.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="en-GB" />
+    <Resource Language="en_IE" />
+  </Resources>
+
+  <Applications>
+    <Application Id="App" Executable="Ledger.exe" EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements
+        DisplayName="Brindlecote Ledger"
+        Description="Books and invoices for small firms"
+        BackgroundColor="transparent"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png" />
+      <Extensions>
+        <uap:Extension Category="windows.protocol">
+          <uap:Protocol Name="ms-ledger">
+            <uap:DisplayName>Brindlecote Ledger link</uap:DisplayName>
+          </uap:Protocol>
+        </uap:Extension>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="Ledger Book">
+            <uap:SupportedFileTypes>
+              <uap:FileType>.ledger</uap:FileType>
+            </uap:SupportedFileTypes>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+        <desktop:Extension Category="windows.startupTask" Executable="LedgerAgent.exe" EntryPoint="Windows.FullTrustApplication">
+          <desktop:StartupTask TaskId="LedgerAgent" Enabled="true" DisplayName="Brindlecote Ledger agent" />
+        </desktop:Extension>
+      </Extensions>
+    </Application>
+    <Application Id="App" Executable="LedgerSync.exe">
+      <uap:VisualElements
+        DisplayName="Brindlecote Ledger Sync"
+        BackgroundColor="transparent"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png" />
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <Capability Name="internetClientServer" />
+    <Capability Name="privateNetworkClientServer" />
+    <restricted:Capability Name="runFullTrust" />
+    <restricted:Capability Name="broadFileSystemAccess" />
+    <DeviceCapability Name="webcam" />
+    <DeviceCapability Name="microphone" />
+    <DeviceCapability Name="location" />
+  </Capabilities>
+</Package>

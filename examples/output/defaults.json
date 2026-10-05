@@ -1,0 +1,38 @@
+{
+  "name": "built-in defaults",
+  "rules": {
+    "missingIdentity": "error",
+    "invalidVersion": "error",
+    "invalidArchitecture": "error",
+    "invalidPublisher": "error",
+    "publisherMismatch": "error",
+    "missingTargetDeviceFamily": "error",
+    "invalidTargetVersion": "error",
+    "minVersionBelowFloor": "warning",
+    "restrictedCapability": "warning",
+    "generalCapability": "info",
+    "missingProperties": "error",
+    "missingAsset": "warning",
+    "invalidApplication": "error",
+    "duplicateApplicationId": "error",
+    "missingVisualElements": "error",
+    "invalidAssociation": "error",
+    "reservedProtocol": "error",
+    "extensionListed": "info",
+    "missingResourceLanguage": "error",
+    "invalidLanguageTag": "warning"
+  },
+  "minBuildFloor": "10.0.17763.0",
+  "allowedRestrictedCapabilities": [],
+  "reservedProtocols": [
+    "http",
+    "https",
+    "file",
+    "ftp",
+    "mailto",
+    "microsoft-edge",
+    "ms-*"
+  ],
+  "minSeverity": "info",
+  "failOn": "error"
+}
