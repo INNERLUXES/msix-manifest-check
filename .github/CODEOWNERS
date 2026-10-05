@@ -1,0 +1,24 @@
+# Every change is reviewed by a maintainer.
+* @innerluxesdev
+
+# The listing of folders, the reading of files, the XML reader and its table of namespaces, the checks of the manifest
+# and its assets, the readers of versions, publishers and language tags, the notes on capabilities, the points of the
+# public pages and the output decide every result and what is read from the disk; changes need extra care.
+/src/walk.js @innerluxesdev
+/src/files.js @innerluxesdev
+/src/xml.js @innerluxesdev
+/src/namespaces.js @innerluxesdev
+/src/json.js @innerluxesdev
+/src/manifest.js @innerluxesdev
+/src/assets.js @innerluxesdev
+/src/publisher.js @innerluxesdev
+/src/versions.js @innerluxesdev
+/src/languages.js @innerluxesdev
+/src/capabilities.js @innerluxesdev
+/src/data.js @innerluxesdev
+/research/ @innerluxesdev
+/src/csv.js @innerluxesdev
+/src/config.js @innerluxesdev
+/src/rules.js @innerluxesdev
+/src/check.js @innerluxesdev
+/src/report.js @innerluxesdev
